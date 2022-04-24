@@ -9,41 +9,38 @@
     <script src="{% static 'js/script.js' %}" defer></script>
   </head>
   <body>
-  <header >
- 
-    <div class="available-budget">
-
-      <p>Total    : $ <span id="total-inc-out">0 </span></p>
-      <p>Income : $ <span id="total-income">0</span></p>
-      <p>Outcome : $ <span id="total-outcome">0</span></p>
-    </div>
- </header>
-    <div class="add-description">
-      <select name="" id="type" class="description-item">
+    <header>
+      <div class="available-budget">
+        <p>Total : $ <span id="total-inc-out">0 </span></p>
+        <p>Income : $ <span id="total-income">0</span></p>
+        <p>Outcome : $ <span id="total-outcome">0</span></p>
+      </div>
+    </header>
+    <form method="post" class="budget-form">
+      <select id="type" class="description-item">
         <option value="+">+</option>
         <option value="-">-</option>
       </select>
       <input
         type="text"
-        id="name"
+        id="desc"
         class="description-item"
         placeholder="Add Income Or Outcome"
       />
       <input
         type="number"
         placeholder="Value"
-        id="amount"
+        id="value"
+        value="4242"
         class="description-item"
       />
       <button id="add-btn">Add</button>
-    </div>
+    </form>
 
     <div class="inc-out-list">
       <div id="incomes-list">
         <p>INCOME</p>
-        <ul id="income-ul">
-         
-        </ul>
+        <ul id="income-ul"></ul>
       </div>
       <div id="outcomes-list">
         <p>OUTCOME</p>
