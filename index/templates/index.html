@@ -40,11 +40,29 @@
     <div class="inc-out-list">
       <div id="incomes-list">
         <p>INCOME</p>
-        <ul id="income-ul"></ul>
+
+        <ul id="income-ul">
+          {% for inc in incomes %}
+          <li>
+            <h1>{{ inc.desc }}</h1>
+            <p>{{ inc.value }}</p>
+            <button class="delete" id="{{inc.id}}">x</button>
+          </li>
+
+          {% endfor %}
+        </ul>
       </div>
       <div id="outcomes-list">
         <p>OUTCOME</p>
-        <ul id="outcome-ul"></ul>
+        <ul id="outcome-ul">
+          {% for out in outcomes %}
+          <li>
+            <h1>{{ out.desc }}</h1>
+            <p>{{ out.value }}</p>
+            <button class="delete" id="{{out.id}}">x</button>
+            {% endfor %}
+          </li>
+        </ul>
       </div>
     </div>
   </body>

@@ -6,9 +6,9 @@ from django.utils import timezone
 class Budget(models.Model):
     CHOICES = (
         ('+', 'INCOME'),
-        ('', 'OUTCOME')
+        ('-', 'OUTCOME')
     )
-    typ = models.CharField(max_length=5, choices=CHOICES, default='+')
+    typ = models.CharField(max_length=5, choices=CHOICES)
     value = models.IntegerField()
     desc = models.TextField()
     time = models.DateTimeField(default=timezone.now)

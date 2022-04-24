@@ -1,10 +1,7 @@
 // var total_budget_field = document.getElementById("total-inc-out");
 // var total_income_field = document.getElementById("total-income");
 // var total_outcome_field = document.getElementById("total-outcome");
-// var income_list = document.getElementById("income-ul");
-// var outcome_list = document.getElementById("outcome-ul");
-// alert('fsfe')
-let add_btn = document.getElementById("add-btn");
+let delete_btns = document.querySelectorAll(".delete");
 let budget_form = document.querySelector(".budget-form");
 
 function addBudgetReq() {
@@ -15,7 +12,7 @@ function addBudgetReq() {
     body: JSON.stringify(data),
   })
     .then((jresp) => jresp.json())
-    .then((resp) => alert(resp.msg))
+    .then((resp) => successHandler(resp))
     .catch((error) => console.log(error));
 }
 
@@ -28,16 +25,55 @@ function form_data(form) {
   }
   return data;
 }
-// form_data(budget_form);
-// add_btn.addEventListener("click", addBudgetReq);
 budget_form.addEventListener("submit", (e) => {
   e.preventDefault();
   addBudgetReq();
 });
-// var type = document.getElementById("type");
-// var description = document.getElementById("name");
-// var amount = document.getElementById("amount");
-// var inputs = document.querySelectorAll("input");
+function successHandler(resp) {
+  if (resp.error) {
+    alert(resp.msg);
+  } else {
+    console.log("sles called");
+    appendBudgetEl(resp);
+  }
+}
+function appendBudgetEl(resp) {
+  let newBudget = JSON.parse(resp)[0]["fields"];
+
+  let element = document.createElement("li");
+  let income_list = document.getElementById("income-ul");
+  let outcome_list = document.getElementById("outcome-ul");
+  element.innerHTML = `
+        <h1>${newBudget["desc"]}</h1>
+        <p>${newBudget["value"]}</p>
+        <button class='delete' id="${newBudget["id"]}">x</button>`;
+
+  if (newBudget["typ"] == "+") {
+    income_list.appendChild(element);
+  } else {
+    outcome_list.appendChild(element);
+  }
+}
+// console.log(delete_btns)
+
+delete_btns.forEach((btn) => {
+  // console.log(btn)
+  btn.addEventListener("click", (e) => {
+    // console.log(e.target.id)
+    deleteBudget(e);
+  });
+});
+function deleteBudget(e) {
+  let url = "http://127.0.0.1:8000/delete-budget/";
+  let data = JSON.stringify({ budg_id: e.target.id });
+  fetch(url, {
+    method: "POST",
+    body: data,
+  })
+    .then((jresp) => jresp.json())
+    .then((resp) => alert(resp["msg"]))
+    .catch((error) => console.log(error));
+}
 // total_income = 20;
 // total_outcome = 10;
 // total_budget = 0;
