@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budgety</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <script src="{% static 'js/script.js' %}" defer></script>
+  </head>
+  <body>
+  <header >
+ 
+    <div class="available-budget">
+
+      <p>Total    : $ <span id="total-inc-out">0 </span></p>
+      <p>Income : $ <span id="total-income">0</span></p>
+      <p>Outcome : $ <span id="total-outcome">0</span></p>
+    </div>
+ </header>
+    <div class="add-description">
+      <select name="" id="type" class="description-item">
+        <option value="+">+</option>
+        <option value="-">-</option>
+      </select>
+      <input
+        type="text"
+        id="name"
+        class="description-item"
+        placeholder="Add Income Or Outcome"
+      />
+      <input
+        type="number"
+        placeholder="Value"
+        id="amount"
+        class="description-item"
+      />
+      <button id="add-btn">Add</button>
+    </div>
+
+    <div class="inc-out-list">
+      <div id="incomes-list">
+        <p>INCOME</p>
+        <ul id="income-ul">
+         
+        </ul>
+      </div>
+      <div id="outcomes-list">
+        <p>OUTCOME</p>
+        <ul id="outcome-ul"></ul>
+      </div>
+    </div>
+  </body>
+</html>

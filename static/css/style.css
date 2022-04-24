@@ -1,0 +1,84 @@
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+  padding: 0;
+  margin: 0;
+  font-size: 18px;
+  text-align: center;
+  list-style-type: none;
+}
+header {
+     display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("/static/images/budget.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 300px;
+  width: 100%;
+  color: white;
+}
+.available-budget {
+    
+    height: 200px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items:flex-start;
+  flex-direction: column;
+}
+
+.add-description {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: rgba(231, 226, 226, 0.774);
+  height: 100px;
+}
+
+#type {
+  height: 40px;
+  width: 50px;
+}
+#name {
+  height: 40px;
+  width: 250px;
+}
+
+#amount {
+  height: 40px;
+  width: 100px;
+}
+#add-btn {
+  height: 40px;
+  width: 50px;
+}
+.inc-out-list {
+  display: flex;
+  justify-content: space-evenly;
+  align-self: center;
+  margin-top: 100px;
+}
+#incomes-list p {
+  color: rgb(84, 134, 192);
+}
+#outcomes-list p {
+  color: rgb(189, 29, 29);
+}
+#income-ul li,
+#outcome-ul li {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 20px;
+  height: 50px;
+  width: 330px;
+  background-color: rgb(204, 196, 196);
+}
+#delete{
+    padding: 5px;
+background-color: rgb(214, 34, 34);
+border: none;
+color: white;
+}
