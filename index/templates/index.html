@@ -12,10 +12,9 @@
   <body>
     <header>
       <div class="available-budget">
-        <p>TOTAL : $ <span id="total-inc-out"></span></p>
-        <p>INCOME : $ <span id="total-income"></span></p>
-        <p>OUTCOME : $ <span id="total-outcome"></span></p>
-        
+        <p>TOTAL : $ <span id="total-inc-out">{{total_val}}</span></p>
+        <p>INCOME : $ <span id="total-income">{{inc_val}}</span></p>
+        <p>OUTCOME : $ <span id="total-outcome">{{out_val}}</span></p>
       </div>
     </header>
     <div class="auth">
@@ -28,6 +27,7 @@
         {% else %}
         <p>
           <a
+
             class="btn mt-3 d-inline-block btn-primary"
             href="{% url 'index:login' %}"
             >Login</a
@@ -48,6 +48,7 @@
       <input
         type="text"
         id="desc"
+        value="hfef"
         class="description-item"
         placeholder="Add Income Or Outcome"
       />
@@ -65,26 +66,35 @@
       <div id="incomes-list">
         <p>INCOME</p>
         <ul id="income-ul">
-          {% for inc in incomes %}
-          <li>
-            <h1>{{ inc.desc }}</h1>
-            <p>{{ inc.value }}</p>
-            <button class="delete" id="{{inc.id}}">x</button>
-          </li>
+            {% if incomes %}
 
-          {% endfor %}
+                {% for inc in incomes %}
+                    <li>
+                        <h1>{{ inc.desc }}</h1>
+                        <p>{{ inc.value }}</p>
+                        <button class="delete" id="{{inc.id}}">x</button>
+                    </li>
+                {% endfor %}
+
+          {% endif %}
         </ul>
       </div>
       <div id="outcomes-list">
         <p>OUTCOME</p>
         <ul id="outcome-ul">
-          {% for out in outcomes %}
-          <li>
-            <h1>{{ out.desc }}</h1>
-            <p>{{ out.value }}</p>
-            <button class="delete" id="{{out.id}}">x</button>
-            {% endfor %}
-          </li>
+            {% if incomes %}
+
+                {% for out in outcomes %}
+                    <li>
+                        <h1>{{ out.desc }}</h1>
+                        <p>{{ out.value }}</p>
+                        <button class="delete" id="{{out.id}}">x</button>
+
+                    </li>
+                {% endfor %}
+            
+            {% endif %}
+
         </ul>
       </div>
     </div>

@@ -8,39 +8,80 @@ from index.models import Budget, Customer
 
 import json
 
+from index.valid import budgetValidator
+
 
 def index(request):
-    incomes = Budget.objects.filter(typ='+')
-    outcomes = Budget.objects.filter(typ='-')
+    user = request.user
+    context = {}
 
-    context = {
-        'incomes': incomes,
-        'outcomes': outcomes}
+    if request.user.is_authenticated:
+
+        try:
+            customer = Customer.objects.get(user=user)
+            incomes = Budget.objects.filter(typ='+', customer=customer)
+            outcomes = Budget.objects.filter(typ='-', customer=customer)
+            context = {
+                'inc_val': customer.inc_val,
+                'out_val': customer.out_val,
+                'total_val': customer.inc_val-customer.out_val,
+                'incomes': incomes,
+                'outcomes': outcomes, }
+        except Exception as e:
+            print(e)
+
     return render(request, 'index.html', context)
 
 
 def addBudget(request):
-    data = json.loads(request.body)
-    resp = {}
+    user = request.user
 
-    if data['value'] is None:
-        resp = {'error': True, 'msg': 'Value Can\'t be less then zero.'}
+    if user.is_authenticated:
+        data = json.loads(request.body)
+        result = budgetValidator(data)
+        new_val = (data['value'])
+        desc = data['desc']
+        typ = data['type']
+        customer = Customer.objects.get(user=request.user)
 
-    elif (len(data['desc']) <= 0):
-        resp = {'error': True, 'msg': 'Description Can\'t be empty.'}
+        if result['error']:
+            return JsonResponse(result['resp'], safe=False)
+        else:
+            newbudget = Budget.objects.create(
+                value=int(new_val), desc=desc, typ=typ, customer=customer)
+
+            if (typ == '+'):
+                customer.inc_val = customer.inc_val + int(new_val)
+            else:
+                customer.out_val = customer.out_val + int(new_val)
+
+            newbudget.save()
+            customer.save()
+
+            newbudget = serializers.serialize('json', [newbudget])
+            return JsonResponse([newbudget], safe=False)
     else:
-        newbudget = Budget.objects.create(
-            value=data['value'], desc=data['desc'], typ=data['type'])
-        newbudget.save()
-        newbudget = serializers.serialize('json', [newbudget])
-    return JsonResponse(newbudget, safe=False)
+        resp = {'error': True, 'msg': 'You Have To Be Logged In'}
+        return JsonResponse(resp, safe=False)
 
 
 def deleteBudget(request):
-    budg_id = json.loads(request.body)['budg_id']
-    budget = Budget.objects.get(id=budg_id)
-    budget.delete()
-    resp = {'msg': 'Successfully Deleted'}
+    if request.user.is_authenticated:
+        resp={}
+        try:
+
+            budg_id = json.loads(request.body)['budg_id']
+            customer = Customer.objects.get(user=request.user)
+            budget = Budget.objects.get(id=budg_id, customer=customer)
+            budget.delete()
+            resp['msg'] = 'Successfully Deleted'
+            return JsonResponse(resp, safe=False)
+
+        except Exception as e:
+            resp['msg'] = 'Something Went Wrong'
+            return JsonResponse(resp, safe=False)
+    
+    resp['msg'] = 'Please Login First'
     return JsonResponse(resp, safe=False)
 
 
@@ -51,39 +92,35 @@ def signup(request):
     if request.method == 'POST':
         data = json.loads(request.body)
 
-
         # CHECK PASSWORD SHOULD BE MATCHED
         if(data['password'] != data['r_password']):
-            print('deos')
             resp = {'error': True, 'msg': 'Password Does not match'}
             return JsonResponse(resp, safe=False)
 
         # TO CHECK FOR EMPTY FIELDS
-        print(data)
-        for key,val in data.items():
-            if val =='':
+        for key, val in data.items():
+            if val == '':
                 resp = {'key': key, 'error': True}
                 return JsonResponse(resp, safe=False)
 
         try:
-            user = User.objects.create(
+            user = User.objects.create_user(
                 first_name=data['full_name'],
                 username=data['username'],
                 password=data['password'])
-            user.save()
-            customer = Customer.objects.create(
-                inc_val=0, out_val=0, user=user
-            )
+            customer = Customer.objects.create(inc_val=0, out_val=0, user=user)
             customer.save()
+            user.save()
+
             auth.login(request, user)
+
+            resp = {'error': False, 'msg': 'Sign Up Successfully'}
+            return JsonResponse(resp, safe=False)
 
         except:
             resp = {'error': True, 'msg': 'Try Again'}
             return JsonResponse(resp, safe=False)
- 
-        resp = {'error': False, 'msg': 'Sign Up Successfully'}
-        return JsonResponse(resp, safe=False)
-   
+
     else:
         return render(request, 'signup.html')
 
@@ -92,13 +129,14 @@ def login(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         user = auth.authenticate(
-            username=data['username'], password=data['password'])
+            request, username=data['username'], password=data['password'])
+
         if user is not None:
             auth.login(request, user)
             resp = {'error': False, 'msg': 'Logged in'}
             return JsonResponse(resp, safe=False)
         else:
-            resp = {'error': False, 'msg': 'Please Try Again!'}
+            resp = {'error': True, 'msg': 'Please Try Again!'}
             return JsonResponse(resp, safe=False)
     else:
         return render(request, 'login.html')
