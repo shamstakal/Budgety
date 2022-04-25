@@ -6,16 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Budgety</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
     <script src="{% static 'js/script.js' %}" defer></script>
   </head>
   <body>
     <header>
       <div class="available-budget">
-        <p>Total : $ <span id="total-inc-out">0 </span></p>
-        <p>Income : $ <span id="total-income">0</span></p>
-        <p>Outcome : $ <span id="total-outcome">0</span></p>
+        <p>TOTAL : $ <span id="total-inc-out"></span></p>
+        <p>INCOME : $ <span id="total-income"></span></p>
+        <p>OUTCOME : $ <span id="total-outcome"></span></p>
+        
       </div>
     </header>
+    <div class="auth">
+
+        {% if user.is_authenticated %}
+        <p>
+          <p>Welcome {{ user.get_full_name }}</p>
+          <a href="{% url 'index:logout' %}">Logout</a>
+        </p>
+        {% else %}
+        <p>
+          <a
+            class="btn mt-3 d-inline-block btn-primary"
+            href="{% url 'index:login' %}"
+            >Login</a
+          >
+          <a
+            class="btn mt-3 d-inline-block btn-primary"
+            href="{% url 'index:signup' %}"
+            >Signup</a
+          >
+        </p>
+        {% endif %}
+    </div>
     <form method="post" class="budget-form">
       <select id="type" class="description-item">
         <option value="+">+</option>
@@ -40,7 +64,6 @@
     <div class="inc-out-list">
       <div id="incomes-list">
         <p>INCOME</p>
-
         <ul id="income-ul">
           {% for inc in incomes %}
           <li>

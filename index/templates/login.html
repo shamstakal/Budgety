@@ -1,0 +1,56 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+<script src="{% static 'js/auth.js' %}" defer></script>
+{% block content %}
+<section class="login py-5 border-top-1">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-8 align-item-center">
+        <div class="border">
+          <h3 class="bg-gray p-4">
+            Login Now
+            <p class="error" id="login-error"></p>
+          </h3>
+
+          <form method="POST" id="login-form">
+            <fieldset class="p-4">
+                
+              <input
+                id="username"
+                type="text"
+                placeholder="Username"
+                class="border p-3 w-100 my-2"
+              />
+              <input
+                id="password"
+                type="password"
+                placeholder="Password"
+                class="border p-3 w-100 my-2"
+              />
+              <div>
+                <button
+                  type="submit"
+                  id="login-btn"
+                  class="btn mt-3 d-inline-block btn-primary"
+                  style="width: 100px"
+                >
+                  Login
+                </button>
+                <a
+                  style="height: 40px"
+                  class="btn mt-3 d-inline-block btn-primary"
+                  href="{% url 'index:signup' %}"
+                  >Register
+                </a>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}
